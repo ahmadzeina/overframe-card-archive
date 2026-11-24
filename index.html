@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>AHMAD ZEINA — Overframe Card Archive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500;800&display=swap">
+<style>
+:root{
+  --paper:#ECE8E0; --sheet:#F3F0EA; --ink:#141414; --muted:#6D6A63; --rule:rgba(20,20,20,.9);
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --H:min(49vh,34vw);
+  --cy:37.5%;
+  --accent:#141414; --accent-ink:#141414;
+  --wspx:48px; --dpx:206px; --gappx:10px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; background:var(--paper); color:var(--ink); overflow:hidden;
+  user-select:none; -webkit-user-select:none;
+  font-family:"Inter Tight","Noto Sans JP",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+a{color:inherit;text-decoration:none}
+*:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+/* ---------- paper grain: fixed, z40, multiply ---------- */
+body::after{
+  content:""; position:fixed; inset:0; z-index:40; pointer-events:none;
+  mix-blend-mode:multiply; opacity:.6;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .42 0 0 0 0 .38 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:220px 220px;
+}
+
+/* ---------- type atoms ---------- */
+.lbl{
+  font-family:"Inter Tight","Noto Sans JP",system-ui,sans-serif;
+  font-weight:600; font-size:10.5px; line-height:1; letter-spacing:.14em;
+  text-transform:uppercase;
+}
+.box{display:inline-flex;align-items:center;height:24px;padding:0 10px;border:1px solid var(--rule)}
+
+/* ---------- Japanese anime duel phrases (left & right) ---------- */
+.kanji{
+  position:fixed; z-index:1; writing-mode:vertical-rl;
+  font-family:"Noto Sans JP",system-ui,sans-serif; font-weight:800;
+  font-size:min(10.5vh,6.4vw); line-height:1.05; letter-spacing:.06em;
+  color:transparent;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(64,82,138,.58) 0 36%, transparent 40%) 0 0/3px 3px,
+    rgba(110,122,160,.28);
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent;
+  pointer-events:none;
+}
+.kanji-l{left:2.2vw;top:11vh}
+.kanji-r{right:2.2vw;top:11vh}
+
+/* ---------- floor shadow ---------- */
+.shadow{
+  position:fixed; left:50%; transform:translateX(-50%);
+  top:calc(var(--cy) + var(--H) * .47);
+  width:min(96vw, calc(var(--H) * 3.6));
+  height:calc(var(--H) * .26);
+  background:radial-gradient(50% 50% at 50% 40%, rgba(40,32,20,.30), rgba(40,32,20,.10) 55%, transparent 72%);
+  z-index:2; pointer-events:none;
+}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:fixed; top:0; left:0; right:0; height:76px; padding:0 36px;
+  display:flex; align-items:center; justify-content:space-between;
+  z-index:20; color:var(--accent-ink);
+}
+.brand{display:flex;align-items:center;gap:16px}
+.brand .line{width:40px;height:1px;background:currentColor}
+.nav{display:flex;align-items:center;gap:34px}
+.burger{width:26px;height:12px;display:flex;flex-direction:column;justify-content:space-between;margin-left:34px}
+.burger i{display:block;height:1.5px;background:currentColor}
+
+/* ---------- rack ---------- */
+.rack{
+  position:fixed; left:0; right:0;
+  top:calc(var(--cy) - var(--H)/2 - 40px);
+  height:calc(var(--H) + 80px);
+  perspective:1400px; perspective-origin:50% 50%;
+  z-index:10; touch-action:pan-y; cursor:pointer;
+}
+.stage{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d}
+.slab{position:absolute;left:0;top:0;width:0;height:0;transform-style:preserve-3d;will-change:transform}
+.face{
+  position:absolute; top:calc(var(--H) * -.5); left:0; height:var(--H);
+  backface-visibility:hidden; -webkit-backface-visibility:hidden;
+  border-radius:2px;
+}
+.face::after{
+  content:""; position:absolute; inset:0; z-index:6; background:#000;
+  opacity:var(--shade,0); pointer-events:none; border-radius:inherit;
+}
+
+/* --- label spine face --- */
+.sp{
+  width:var(--wspx); left:calc(var(--wspx) / -2);
+  transform:translateZ(calc(var(--dpx) / 2));
+  background:linear-gradient(90deg,#F0ECE3 0%,#E6E0D4 55%,#D9D2C4 100%);
+  border:1px solid rgba(20,20,20,.38);
+  overflow:hidden;
+}
+.sp-strip{position:absolute;left:0;top:0;bottom:0;width:16%;background:var(--frm)}
+.sp-thumb{
+  position:absolute;left:22%;right:10%;top:2%;height:12%;
+  background:#cfc7b8 center/cover no-repeat;
+  border:1px solid rgba(0,0,0,.45);
+}
+.sp-name{
+  position:absolute;left:22%;right:8%;top:17%;bottom:27%;
+  writing-mode:vertical-rl; white-space:nowrap; overflow:hidden;
+  font-size:calc(var(--wspx) * .255); line-height:1; font-weight:600;
+  letter-spacing:.02em; color:#1B1B1B;
+}
+.sp-code{
+  position:absolute;bottom:12%;left:22%;right:7%;
+  font-size:calc(var(--wspx) * .175); letter-spacing:.05em; color:#2A2A2A;
+  white-space:nowrap; overflow:hidden;
+}
+.sp-grade{
+  position:absolute;bottom:3%;left:22%;right:7%;
+  border:1px solid #2A2A2A; text-align:center; padding:3% 0;
+  font-size:calc(var(--wspx) * .165); font-weight:600; letter-spacing:.06em; color:#1B1B1B;
+}
+.sp-sheen{
+  position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;
+  background:linear-gradient(103deg,transparent 38%,rgba(255,255,255,.7) 47%,transparent 57%);
+}
+
+/* --- card face (overframe) --- */
+.cv{
+  width:var(--dpx); left:calc(var(--dpx) / -2);
+  transform:rotateY(90deg) translateZ(calc(var(--wspx) / 2));
+  box-shadow:0 34px 60px -30px rgba(20,16,10,.6);
+  background:var(--frm);
+}
+.cv-frame{position:absolute;inset:0;background:var(--frm);border:1px solid var(--frm-ink);border-radius:2px;overflow:hidden}
+.cv-head{
+  position:absolute;top:0;left:0;right:0;height:15%;
+  display:flex;align-items:center;justify-content:space-between;gap:4%;
+  padding:0 7%;
+  background:linear-gradient(180deg,rgba(0,0,0,.14),rgba(0,0,0,.02));
+  border-bottom:1px solid rgba(0,0,0,.28);
+}
+.cv-name{
+  font-size:calc(var(--dpx) * .049); font-weight:600; letter-spacing:.005em;
+  color:var(--on-frm); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.cv-mark{
+  font-size:calc(var(--dpx) * .026); font-weight:600; letter-spacing:.18em;
+  color:var(--on-frm); opacity:.55; white-space:nowrap; flex:0 0 auto;
+}
+.cv-art{
+  position:absolute;left:8%;right:8%;top:16.5%;height:47%;
+  border:1px solid var(--frm-ink);
+  background:linear-gradient(140deg,var(--frm) 0%,var(--frm-ink) 100%);
+}
+.cv-inner{position:absolute;inset:0;overflow:hidden;z-index:1}
+.cv-inner img{width:100%;height:100%;object-fit:cover;display:block}
+.cv-bleed{
+  position:absolute;inset:0;z-index:2;pointer-events:none;
+  transform:scale(1.13) translateY(-2.5%);
+  -webkit-mask-image:radial-gradient(ellipse 60% 58% at 50% 45%, #000 52%, rgba(0,0,0,.62) 70%, transparent 88%);
+  mask-image:radial-gradient(ellipse 60% 58% at 50% 45%, #000 52%, rgba(0,0,0,.62) 70%, transparent 88%);
+}
+.cv-bleed img{width:100%;height:100%;object-fit:cover;display:block}
+.cv-stars{
+  position:absolute;left:8%;right:8%;top:65.2%;height:4.5%;
+  display:flex;align-items:center;gap:1.6%;flex-wrap:nowrap;overflow:hidden;
+}
+.cv-stars i{
+  display:block;width:calc(var(--dpx) * .034);height:calc(var(--dpx) * .034);
+  border-radius:50%;background:var(--on-frm);opacity:.85;flex:0 0 auto;
+}
+.cv-stars i.rank{border-radius:1px;width:calc(var(--dpx) * .03);height:calc(var(--dpx) * .03)}
+.cv-foot{
+  position:absolute;left:8%;right:8%;bottom:5%;height:22%;
+  border:1px solid var(--frm-ink); background:rgba(255,255,255,.22);
+  padding:3.5% 4.5%; display:flex; flex-direction:column; justify-content:space-between;
+  overflow:hidden;
+}
+.cv-text{
+  margin:0; font-size:calc(var(--dpx) * .027); line-height:1.22; color:var(--on-frm);
+  overflow:hidden; display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical;
+}
+.cv-nums{
+  font-size:calc(var(--dpx) * .032); font-weight:600; letter-spacing:.02em;
+  color:var(--on-frm); text-align:right;
+}
+
+.cv.has-custom-art{background:var(--paper)}
+.cv.has-custom-art .cv-frame{border:1px solid rgba(20,20,20,.22);background:var(--paper)}
+.cv.has-custom-art .cv-head,
+.cv.has-custom-art .cv-art,
+.cv.has-custom-art .cv-stars,
+.cv.has-custom-art .cv-foot{display:none}
+.cv.has-custom-art .cv-custom-art{
+  position:absolute; inset:0; z-index:1; overflow:hidden;
+}
+.cv.has-custom-art .cv-custom-art img{
+  width:100%; height:100%; object-fit:cover; display:block;
+}
+
+/* ---------- view ring ---------- */
+.ring{
+  position:fixed; z-index:14; width:42px; height:42px; border-radius:50%;
+  border:1px solid var(--accent); background:rgba(236,232,224,.8);
+  left:calc(50% - var(--dpx)/2 - 6px);
+  top:calc(var(--cy) + .36 * var(--H));
+  transform:translate(-50%,-50%) scale(0);
+  pointer-events:none; display:grid; place-items:center;
+}
+.ring svg{display:block;width:12px;height:12px}
+
+/* ---------- card name only under card (positioned cleanly above timeline) ---------- */
+.cap{
+  position:fixed; left:50%; transform:translateX(-50%);
+  top:calc(var(--cy) + var(--H)/2 + 18px);
+  width:min(82vw,720px);
+  display:grid; justify-items:center; text-align:center;
+  z-index:12; pointer-events:none;
+}
+.mask{display:grid;width:100%;overflow:hidden}
+.mask > *{grid-area:1/1;min-width:0}
+.cap-title{
+  font-family:"Inter Tight","Noto Sans JP",system-ui,sans-serif;
+  font-weight:600; font-size:clamp(21px,2.3vw,32px); line-height:1.1;
+  letter-spacing:-.015em; color:var(--accent-ink); padding:.04em 0;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+
+/* ---------- arrows ---------- */
+.arrow{
+  position:fixed; z-index:15; width:44px; height:44px;
+  bottom:108px;
+  transform:translate(-50%,0);
+  display:grid; place-items:center; color:var(--accent); border-radius:50%;
+}
+.arrow svg{display:block;width:24px;height:12px}
+#prev{left:calc(50% - min(18vw,220px))}
+#next{left:calc(50% + min(18vw,220px))}
+
+/* ---------- timeline ---------- */
+.timeline{
+  position:fixed;left:36px;right:36px;bottom:60px;height:42px;z-index:15;color:var(--accent-ink);
+}
+.tl-line{position:absolute;left:0;right:0;top:12px;height:1px;background:var(--accent);opacity:.75;pointer-events:none}
+.tl-tick{position:absolute;top:12px;width:1px;height:13px;background:var(--accent);opacity:.75;transform:translateX(-.5px);pointer-events:none}
+.tl-year{
+  position:absolute;top:29px;
+  font-family:"Inter Tight","Noto Sans JP",system-ui,sans-serif;
+  font-weight:500; font-size:9.5px; letter-spacing:.06em; white-space:nowrap;
+  color:var(--accent-ink); pointer-events:none;
+}
+.tl-dot{
+  position:absolute;top:12px;width:9px;height:9px;border-radius:50%;
+  background:var(--accent);transform:translate(-50%,-50%);pointer-events:none;
+}
+.tl-hit{position:absolute;inset:-6px 0 -8px 0;cursor:pointer}
+
+/* ---------- footer ---------- */
+.foot{
+  position:fixed; left:36px; right:36px; bottom:22px; z-index:15;
+  display:flex; align-items:center; justify-content:space-between;
+  color:var(--accent-ink);
+}
+.foot .links{display:flex;gap:14px}
+
+/* ---------- cursor ---------- */
+.cursor{position:fixed;left:0;top:0;width:0;height:0;z-index:100;pointer-events:none;will-change:transform}
+.cur-ring{
+  position:absolute;left:-29px;top:-29px;width:58px;height:58px;border-radius:50%;
+  border:1.5px solid var(--ink);
+  transition:transform .35s var(--ease), background-color .3s var(--ease), border-color .3s var(--ease);
+}
+.cur-dot{
+  position:absolute;left:-3px;top:-3px;width:6px;height:6px;border-radius:50%;
+  background:var(--ink);
+  transition:transform .3s var(--ease), background-color .3s var(--ease);
+}
+.cur-label{
+  position:absolute;left:-44px;top:-16px;width:88px;
+  display:grid;justify-items:center;gap:1px;
+  color:#fff;font-family:"Inter Tight",system-ui,sans-serif;font-weight:600;
+  font-size:10px;letter-spacing:.14em;line-height:1.15;text-align:center;
+  clip-path:inset(0 0 100% 0); transition:clip-path .35s var(--ease);
+}
+.cur-label .jp{font-family:"Noto Sans JP",sans-serif;letter-spacing:.06em;font-size:10px}
+.cursor.open .cur-ring{transform:scale(1.75);background:var(--accent);border-color:var(--accent)}
+.cursor.open .cur-label{clip-path:inset(0 0 0 0)}
+.cursor.spine .cur-ring{transform:scale(.72)}
+.cursor.btn .cur-ring{transform:scale(.55)}
+.cursor.btn .cur-dot{transform:scale(0)}
+@media (pointer:fine){ body{cursor:none} body.sheet-open{cursor:auto} }
+@media (pointer:coarse){ .cursor{display:none} }
+
+/* ---------- detail sheet + wallpaper background ---------- */
+.detail{
+  position:fixed; inset:0; z-index:60; background:var(--sheet);
+  display:none; overflow-y:auto; overflow-x:hidden;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  grid-template-rows:auto 1fr;
+  gap:16px 4vw; padding:0 6vw 56px 7vw;
+  align-items:center; cursor:auto;
+}
+.detail.show{display:grid}
+.d-wallpaper{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-position:center; background-size:cover; background-repeat:no-repeat;
+}
+.d-scrim{
+  position:fixed; inset:0; z-index:1; pointer-events:none;
+  background:
+    linear-gradient(90deg, rgba(243,240,234,.92) 0%, rgba(243,240,234,.82) 52%, rgba(243,240,234,.68) 100%),
+    radial-gradient(circle at 75% 50%, rgba(20,20,20,.08), rgba(20,20,20,.32));
+}
+
+/* Sticky top header inside sheets that hides when scrolled down */
+.d-header{
+  grid-column:1 / -1; align-self:start;
+  position:sticky; top:0; z-index:62;
+  height:76px; margin:0 -6vw 8px -7vw; padding:0 32px;
+  display:flex; align-items:center; justify-content:space-between;
+  background:linear-gradient(180deg, rgba(243,240,234,.94) 0%, rgba(243,240,234,.72) 70%, rgba(243,240,234,0) 100%);
+  transition:opacity .25s var(--ease);
+}
+.detail.scrolled .d-header,
+.about-sheet.scrolled .d-header{
+  opacity:0; pointer-events:none;
+}
+.d-close{
+  background:rgba(243,240,234,.96); color:var(--accent-ink);
+  box-shadow:0 4px 16px rgba(20,20,20,.08);
+}
+.d-brand{color:var(--accent-ink)}
+.d-left, .d-right{position:relative; z-index:2}
+.d-left{display:grid;gap:16px;justify-items:start;max-width:520px;width:100%;justify-self:end}
+.dmask{display:grid;width:100%;overflow:hidden}
+.dmask > *{grid-area:1/1;transform:translateY(110%);min-width:0}
+.d-code{
+  font-family:"Inter Tight","Noto Sans JP",system-ui,sans-serif;
+  font-weight:600;font-size:10.5px;line-height:1;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent-ink);
+}
+.d-title{
+  font-family:"Inter Tight","Noto Sans JP",system-ui,sans-serif;
+  font-weight:600;font-size:clamp(34px,4.2vw,64px);line-height:1.03;letter-spacing:-.025em;
+  color:var(--accent-ink);padding:.02em 0;
+}
+.d-meta{
+  font-family:"Inter Tight","Noto Sans JP",system-ui,sans-serif;
+  font-weight:500;font-size:12px;letter-spacing:.06em;color:var(--muted);
+}
+.d-stats{
+  font-family:"Inter Tight","Noto Sans JP",system-ui,sans-serif;
+  font-weight:600;font-size:15px;letter-spacing:.04em;color:var(--accent);
+}
+.d-effect{font-family:"Newsreader",Georgia,serif;font-size:16.5px;line-height:1.52;color:var(--ink);max-width:44ch}
+.d-credit{font-family:"Newsreader",Georgia,serif;font-style:italic;font-size:13px;line-height:1.4;color:var(--muted)}
+.d-watch{
+  display:inline-flex;align-items:center;justify-content:center;height:42px;padding:0 18px;
+  border:1px solid var(--accent);color:var(--accent-ink);background:rgba(243,240,234,.82);
+  font-family:"Inter Tight","Noto Sans JP",system-ui,sans-serif;
+  font-weight:600;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;margin-top:4px;
+}
+
+/* ---------- transparent delayed original/retrain card reveal on the right ---------- */
+.d-right{display:flex;align-items:center;justify-content:center;min-width:0}
+.ref-box{
+  display:grid; gap:10px; justify-items:center;
+  max-width:min(380px, 100%); width:100%;
+  background:transparent;
+  opacity:0;
+  clip-path:inset(50% 50% 50% 50% round 4px);
+}
+.ref-tag{
+  font-family:"Inter Tight","Noto Sans JP",system-ui,sans-serif;
+  font-weight:600; font-size:10.5px; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--accent-ink);
+  text-shadow:0 1px 10px rgba(243,240,234,.95);
+}
+.ref-name{
+  font-family:"Inter Tight","Noto Sans JP",system-ui,sans-serif;
+  font-weight:600; font-size:17px; letter-spacing:-.01em; color:var(--ink);
+  text-align:center;
+  text-shadow:0 1px 12px rgba(243,240,234,.98);
+}
+.ref-card-wrap{
+  width:min(285px, 72vw); aspect-ratio:206 / 300;
+  border-radius:4px;
+  overflow:hidden;
+  display:grid; place-items:center; position:relative;
+  box-shadow:0 28px 60px -18px rgba(15,12,8,.55);
+}
+.ref-card-wrap img{
+  width:100%; height:100%; object-fit:cover; display:block;
+}
+.ref-placeholder{
+  padding:16px; text-align:center;
+  background:rgba(243,240,234,.75);
+  border:1px solid rgba(20,20,20,.25);
+  font-family:"Newsreader",Georgia,serif; font-style:italic; font-size:13.5px; color:var(--ink);
+}
+
+/* ---------- About Me sheet (same style, wallpaper, and pop-up animation) ---------- */
+.about-sheet{
+  position:fixed; inset:0; z-index:65; background:var(--sheet);
+  display:none; overflow-y:auto; overflow-x:hidden;
+  grid-template-columns:minmax(0,1fr);
+  grid-template-rows:auto 1fr;
+  padding:0 7vw 72px 7vw;
+  cursor:auto;
+}
+.about-sheet.show{display:grid}
+.about-inner{
+  position:relative; z-index:2;
+  width:min(1060px, 100%); margin:0 auto;
+  display:grid; gap:36px;
+}
+.about-hero{
+  display:grid; gap:12px; max-width:680px;
+  padding-bottom:24px;
+  border-bottom:1px solid rgba(20,20,20,.22);
+}
+.about-kicker{
+  font-family:"Inter Tight","Noto Sans JP",system-ui,sans-serif;
+  font-weight:600; font-size:10.5px; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--accent-ink);
+}
+.about-title{
+  margin:0;
+  font-family:"Inter Tight","Noto Sans JP",system-ui,sans-serif;
+  font-weight:600; font-size:clamp(36px,4.8vw,68px); line-height:1.02; letter-spacing:-.025em;
+  color:var(--ink);
+}
+.about-lead{
+  margin:4px 0 0;
+  font-family:"Newsreader",Georgia,serif; font-size:19px; line-height:1.52;
+  color:var(--ink); max-width:56ch;
+}
+.about-grid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0,1fr));
+  gap:24px 36px;
+}
+.about-sec{
+  padding-top:16px;
+  border-top:1px solid rgba(20,20,20,.22);
+  display:grid; gap:10px; align-content:start;
+}
+.about-sec-num{
+  font-family:"Inter Tight",system-ui,sans-serif;
+  font-weight:600; font-size:10px; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--muted);
+}
+.about-sec h2{
+  margin:0;
+  font-family:"Inter Tight","Noto Sans JP",system-ui,sans-serif;
+  font-weight:600; font-size:21px; line-height:1.2; letter-spacing:-.015em;
+  color:var(--ink);
+}
+.about-sec p{
+  margin:0;
+  font-family:"Newsreader",Georgia,serif; font-size:16px; line-height:1.58;
+  color:var(--ink);
+}
+.about-tags{
+  display:flex; flex-wrap:wrap; gap:8px; margin-top:4px;
+}
+.about-tag{
+  display:inline-flex; align-items:center; height:24px; padding:0 10px;
+  border:1px solid rgba(20,20,20,.38);
+  background:rgba(243,240,234,.55);
+  font-family:"Inter Tight",system-ui,sans-serif;
+  font-weight:600; font-size:9.5px; letter-spacing:.13em; text-transform:uppercase;
+  color:var(--ink);
+}
+.about-anim{opacity:0; transform:translateY(22px)}
+
+/* ---------- phones ---------- */
+@media (max-width:767px){
+  :root{--H:min(58vw,35svh); --cy:36.5%}
+  .topbar{height:60px;padding:0 16px}
+  .nav .lbl{display:none}
+  .burger{margin-left:0}
+  .brand .line{width:22px}
+  .kanji{font-size:10vw;opacity:.85}
+  .cap{top:calc(var(--cy) + var(--H)/2 + 12px);width:min(90vw,540px)}
+  .cap-title{font-size:20px}
+  .arrow{bottom:104px}
+  #prev{left:26px}
+  #next{left:auto;right:26px;transform:translate(50%,0)}
+  .timeline{left:16px;right:16px;bottom:52px}
+  .tl-year.hide{display:none}
+  .foot{left:16px;right:16px;bottom:14px;font-size:9px}
+  .ring{display:none}
+  .detail{grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto auto;gap:18px;padding:0 20px 48px;align-items:start}
+  .d-scrim{background:linear-gradient(180deg, rgba(243,240,234,.82) 0%, rgba(243,240,234,.92) 55%, rgba(243,240,234,.96) 100%)}
+  .d-header{height:64px;margin:0 -20px 4px -20px;padding:0 16px}
+  .d-right{width:100%}
+  .d-left{justify-self:start;gap:12px}
+  .d-title{font-size:34px}
+  .d-brand{font-size:8.5px;letter-spacing:.1em}
+  .about-sheet{padding:0 20px 56px 20px}
+  .about-grid{grid-template-columns:minmax(0,1fr);gap:20px}
+}
+@media (prefers-reduced-motion:reduce){
+  .cur-ring,.cur-dot,.cur-label{transition:none}
+}
+</style>
+</head>
+<body>
+
+<div class="kanji kanji-l" aria-hidden="true">デュエルだ！</div>
+<div class="kanji kanji-r" aria-hidden="true">ターンエンド</div>
+<div class="shadow" aria-hidden="true"></div>
+
+<header class="topbar">
+  <div class="brand">
+    <a href="#" class="lbl" id="brandBtn">AHMAD ZEINA</a>
+    <span class="line"></span>
+    <span class="lbl">CARD ARCHIVE</span>
+  </div>
+  <div class="nav">
+    <a href="#" class="lbl" id="cardsNavBtn">CARDS</a>
+    <a href="#" class="lbl" id="aboutNavBtn">ABOUT ME</a>
+    
+    <button class="burger" id="burgerBtn" aria-label="About Me"><i></i><i></i></button>
+  </div>
+</header>
+
+<div class="rack" id="rack" aria-label="Card rack">
+  <div class="stage" id="stage"></div>
+</div>
+
+<div class="ring" id="ring" aria-hidden="true">
+  <svg viewBox="0 0 12 12" fill="var(--accent)"><path d="M6 1l5 5-5 5z"/></svg>
+</div>
+
+<div class="cap" id="cap">
+  <div class="mask"><span class="cap-title" id="capTitle"></span></div>
+</div>
+
+<button class="arrow" id="prev" aria-label="Previous card">
+  <svg viewBox="0 0 24 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 1L1 6l5 5M1 6h23"/></svg>
+</button>
+<button class="arrow" id="next" aria-label="Next card">
+  <svg viewBox="0 0 24 12" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M18 1l5 5-5 5M23 6H0"/></svg>
+</button>
+
+<div class="timeline" id="timeline">
+  <div class="tl-line"></div>
+  <div class="tl-dot" id="tlDot"></div>
+  <div class="tl-hit" id="tlHit"></div>
+</div>
+
+<footer class="foot">
+  <span class="lbl">Artwork ©スタジオ・ダイス／集英社・テレビ東京・KONAMI. ALL RIGHTS RESERVED.</span>
+  <span class="links">
+    <a href="https://github.com/ahmadzeina" class="lbl">GITHUB</a>
+    <a href="https://www.linkedin.com/in/ahmadzeina821" class="lbl">LinkedIn</a>
+  </span>
+</footer>
+
+<div class="cursor" id="cursor" aria-hidden="true">
+  <div class="cur-ring"></div>
+  <div class="cur-dot"></div>
+  <div class="cur-label"><span>OPEN</span><span class="jp">開く</span></div>
+</div>
+
+<!-- Card Detail Sheet -->
+<section class="detail" id="detail" aria-hidden="true" aria-label="Card detail">
+  <div class="d-wallpaper" id="dWallpaper" aria-hidden="true"></div>
+  <div class="d-scrim" aria-hidden="true"></div>
+
+  <div class="d-header" id="dHeader">
+    <button class="d-close box lbl" id="closeBtn">CLOSE / 閉じる</button>
+    <div class="d-brand lbl">AHMAD ZEINA —— CARD ARCHIVE</div>
+  </div>
+
+  <div class="d-left">
+    <div class="dmask"><div class="d-code" id="dCode"></div></div>
+    <div class="dmask"><div class="d-title" id="dTitle"></div></div>
+    <div class="dmask"><div class="d-meta" id="dMeta"></div></div>
+    <div class="dmask"><div class="d-stats" id="dStats"></div></div>
+    <div class="dmask"><div class="d-effect" id="dEffect"></div></div>
+    <div class="dmask"><div class="d-credit" id="dCredit"></div></div>
+    <div class="dmask"><button class="d-watch" id="dWatch">VIEW IN DUEL / デュエルへ</button></div>
+  </div>
+
+  <div class="d-right">
+    <div class="ref-box" id="refBox">
+      <div class="ref-tag" id="refTag">ORIGINAL CARD / RETRAIN</div>
+      <div class="ref-name" id="refName"></div>
+      <div class="ref-card-wrap" id="refCardWrap"></div>
+    </div>
+  </div>
+</section>
+
+<!-- About Me Sheet -->
+<section class="about-sheet" id="aboutSheet" aria-hidden="true" aria-label="About Ahmad Zeina">
+  <div class="d-wallpaper" id="aboutWallpaper" aria-hidden="true"></div>
+  <div class="d-scrim" aria-hidden="true"></div>
+
+  <div class="d-header">
+    <button class="d-close box lbl" id="aboutCloseBtn">CLOSE / 閉じる</button>
+    <div class="d-brand lbl">AHMAD ZEINA —— ABOUT ME</div>
+  </div>
+
+  <div class="about-inner">
+    <div class="about-hero about-anim">
+      <div class="about-kicker">DUELIST PROFILE / 決闘者プロフィール</div>
+      <h1 class="about-title">𝓐𝓱𝓶𝓪𝓭 𝓩𝓮𝓲𝓷𝓪</h1>
+      <p class="about-lead">
+        Software engineer by craft, competitive duelist by passion — curating the art and evolution of Yu-Gi-Oh! Overframe cards.
+      </p>
+    </div>
+
+    <div class="about-grid">
+      <article class="about-sec about-anim">
+        <div class="about-sec-num">01 / ENGINEERING &amp; CRAFT</div>
+        <h2>𝒮𝑜𝒻𝓉𝓌𝒶𝓇𝑒 𝐸𝓃𝑔𝒾𝓃𝑒𝑒𝓇</h2>
+        <p>
+          I work as a Software Engineer, building clean, reliable systems with an eye for structure and detail. That same appreciation for well-engineered architecture is what drew me to catalogue Overframe cards in a tactile, physical-feeling digital archive.
+        </p>
+        <div class="about-tags">
+          <span class="about-tag">Software Engineering</span>
+          <span class="about-tag">Archive Curator</span>
+        </div>
+      </article>
+
+      <article class="about-sec about-anim">
+        <div class="about-sec-num">02 / COMPETITIVE DUELING</div>
+        <h2>𝒪𝓃𝓁𝒾𝓃𝑒 𝒜𝓇𝑒𝓃𝒶 𝓉𝑜 𝒯𝒞𝒢 𝒯𝒶𝒷𝓁𝑒𝓈</h2>
+        <p>
+          Yu-Gi-Oh! has been one of my favorite games and anime series for years, and I still play competitively today. Most of my matches happen online — though I haven't participated in an official in-person TCG event yet, stepping onto the live tournament floor is high on my list.
+        </p>
+        <div class="about-tags">
+          <span class="about-tag">Competitive Online</span>
+          <span class="about-tag">Future TCG Competitor</span>
+        </div>
+      </article>
+
+      <article class="about-sec about-anim">
+        <div class="about-sec-num">03 / SIGNATURE MONSTERS</div>
+        <h2>𝒯𝒽𝑒 𝒲𝒾𝓃𝑔𝑒𝒹 𝒟𝓇𝒶𝑔𝑜𝓃 𝑜𝒻 𝑅𝒶 𝒶𝓃𝒹 𝒦𝒶𝒾𝒷𝒶'𝓈 𝐿𝑒𝑔𝒶𝒸𝓎</h2>
+        <p>
+          Picking a single favorite boss monster is never easy, but <strong>The Winged Dragon of Ra</strong> holds a special place at the top. At the same time, I'm a huge Seto Kaiba fan and a dedicated <strong>Blue-Eyes</strong> enjoyer — nothing matches the presence of high-level dragons and Egyptian God cards dominating the field.
+        </p>
+        <div class="about-tags">
+          <span class="about-tag">The Winged Dragon of Ra</span>
+          <span class="about-tag">Seto Kaiba</span>
+          <span class="about-tag">Blue-Eyes</span>
+        </div>
+      </article>
+
+      <article class="about-sec about-anim">
+        <div class="about-sec-num">04 / OVERFRAME VISION</div>
+        <h2>𝒯𝒽𝑒 𝐵𝑒𝓈𝓉 𝒯𝒽𝒾𝓃𝑔 𝒦𝑜𝓃𝒶𝓂𝒾 𝒟𝒾𝒹 𝒶𝓃𝒹 𝒢𝑒𝓂-𝒦𝓃𝒾𝑔𝒽𝓉 𝒲𝒾𝓈𝒽</h2>
+        <p>
+          The Overframe card treatment is easily the best innovation Konami has introduced in recent years — breaking artwork past the traditional border completely changed how cards feel and look. If I could choose one archetype to receive the Overframe treatment next, it would be <strong>Gem-Knight</strong>; their crystalline fusion artwork would look unreal breaking out of the frame.
+        </p>
+        <div class="about-tags">
+          <span class="about-tag">Overframe Era</span>
+          <span class="about-tag">Gem-Knight Wishlist</span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<div id="probe" style="position:fixed;left:-9999px;top:0;width:1px;height:var(--H);pointer-events:none" aria-hidden="true"></div>
+
+<script>
+(function(){
+"use strict";
+
+const FRAME = {
+  normal:  ['#C9A961', '#7A5A18'],
+  effect:  ['#C77B2E', '#7A3E0E'],
+  ritual:  ['#4C7FB6', '#1F4A7A'],
+  fusion:  ['#7B4FA0', '#4A2C68'],
+  synchro: ['#E3DFD4', '#6E6A62'],
+  xyz:     ['#2A2A33', '#141418'],
+  spell:   ['#3E8E6E', '#1E5A42'],
+  trap:    ['#B5476E', '#6E2440']
+};
+
+function hexLum(h){
+  const n = parseInt(h.slice(1), 16);
+  const r = (n >> 16 & 255) / 255, g = (n >> 8 & 255) / 255, b = (n & 255) / 255;
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+const FRAME_ON = {};
+for (const k in FRAME) FRAME_ON[k] = hexLum(FRAME[k][0]) < 0.6 ? '#F4F0E6' : '#1C1913';
+
+
+const ABOUT_ME_WALLPAPER = './overframe-wallpapers/me.jpg';
+
+const SEED = [
+  { id:'valley',   name:'Dark Magical Curtain', type:'spell',  attr:'—', lv:null, rank:false, atk:null, def:null,
+    set:'Limit Over Collection: The Heroes', ocgDate:'2026-02',
+    art:'./overframe-cards/3.webp',
+    wallpaper:'./overframe-wallpapers/curtain.jpg',
+    relation:'Inspired by', originalName:'Dark Magic Curtain', originalArt:'./overframe-originals/01-curtain.png',
+    effect:'Each player can Special Summon 1 DARK Spellcaster monster from their hand or Deck (but neither player can activate their effects this turn), then if you Special Summoned a monster whose original name is "Dark Magician" or "Dark Magician Girl", you can add 1 Spell/Trap that mentions "Dark Magician" from your Deck to your hand, except "Dark Magical Curtain". You can only activate 1 "Dark Magical Curtain" per turn.' },
+  { id:'bluehour', name:"Dark Magician, the Pharaoh's Servant", type:'effect', attr:'DARK', lv:7, rank:false, atk:2500, def:2100,
+    set:'Limit Over Collection: The Heroes', ocgDate:'2026-02',
+    art:'./overframe-cards/DarkMagicianthePharaohsServant.png',
+    wallpaper:'./overframe-wallpapers/DM.jpg',
+    relation:'Retrain of', originalName:'Dark Magician', originalArt:'./overframe-originals/02-dm.jpg',
+    effect:`This card's name becomes "Dark Magician" while on the field or in the GY. You can only use 1 of the following effects of "Dark Magician, the Pharaoh's Servant" per turn, and only once that turn. If this card is in your hand: You can reveal 1 Spell in your hand; Special Summon this card, then you can Set 1 Spell/Trap that mentions "Dark Magician" from your Deck. (Quick Effect): You can discard 1 Spell; destroy all Spells/Traps your opponent controls.` },
+  { id:'river',    name:'Blue-Eyes White Dragon, the White Phantom Beast', type:'effect', attr:'LIGHT', lv:8, rank:false, atk:3000, def:2500,
+    set:'Limit Over Collection: The Rivals', ocgDate:'2026-03',
+    art:'./overframe-cards/2.webp',
+    wallpaper:'./overframe-wallpapers/be.png',
+    relation:'Retrain of', originalName:'Blue-Eyes White Dragon', originalArt:'./overframe-originals/03-be.jpg',
+    effect:`When this card is added from the Deck to your hand, or a monster you control is destroyed by battle: You can reveal this card in your hand; Special Summon it. If this card is Special Summoned from the hand or Deck: You can destroy all monsters your opponent controls, also you can only attack directly with "Blue-Eyes" monsters for the rest of this turn. You can only use each of the preceding effects of "Blue-Eyes White Dragon, the White Phantom Beast" once per turn. When a card or effect is activated that targets this card on the field (Quick Effect): You can discard 1 card; negate that effect.` },
+  { id:'summer',   name:'Blue-Eyes Chaos MAXIMUM Dragon', type:'ritual', attr:'DARK', lv:8, rank:false, atk:4000, def:0,
+    set:'SDP-001', ocgDate:'2026-03',
+    art:'./overframe-cards/4.webp',
+    wallpaper:'./overframe-wallpapers/max.jpg',
+    relation:'Inspired by', originalName:'Blue-Eyes Chaos MAX Dragon', originalArt:'./overframe-originals/04-max.jpg',
+    effect:`You can Ritual Summon this card with "Chaos Form". Must be Ritual Summoned. You can banish this card from your hand; add 1 "Neo Chaos Form" from your Deck, GY, or banishment to your hand. You can only use this effect of "Blue-Eyes Chaos MAXIMUM Dragon" once per turn. If your monster that mentions "Endless Darkness" attacks a Defense Position monster, inflict piercing battle damage to your opponent. Any battle damage your opponent takes from battles involving this card is doubled.` },
+  { id:'green',    name:`Obelisk the Tormentor, the Pharaoh's Memory`, type:'effect', attr:'DIVINE', lv:10, rank:false, atk:4000, def:4000,
+    set:'Yu-Gi-Oh! The Dark Side of Dimensions 10th Anniversary', ocgDate:'2026-12',
+    art:'./overframe-cards/obelisk.jpg',
+    wallpaper:'./overframe-wallpapers/ob.jpg',
+    relation:'Retrain of', originalName:'Obelisk the Tormentor', originalArt:'./overframe-originals/ob.webp',
+    effect:`Cannot be Normal Summoned/Set. Must be Special Summoned by its own effect. When you draw this card, or an opponent's monster declares a direct attack: You can reveal this card in your hand; Special Summon from your GY as many monsters destroyed this turn as possible, then Tribute as many monsters you control as possible, and if you do, Special Summon this card, then if you Tributed 3 or more monsters, destroy as many monsters your opponent controls as possible, and if you do, halve your opponent's LP. You can only use this effect of "Obelisk the Tormentor, the Pharaoh's Memory" once per Duel.`},
+  { id:'noon',     name:'Deep-Eyes White Dragon, the Blue Abyss', type:'effect', attr:'LIGHT', lv:10, rank:false, atk:0, def:0,
+    set:'Limit Over Collection: The Rivals', ocgDate:'2026-03',
+    art:'./overframe-cards/6.webp',
+    wallpaper:'./overframe-wallpapers/deep.jpg',
+    relation:'Retrain of', originalName:'Deep-Eyes White Dragon', originalArt:'./overframe-originals/deep.jpg',
+    effect:`(This card is always treated as a "Blue-Eyes" card.) You can discard this card; add 1 Level 1 LIGHT Tuner from your Deck to your hand. If a "Blue-Eyes" Ritual Monster(s) and/or "Blue-Eyes White Dragon" is sent to your GY (except during the Damage Step): You can target 1 of them; Special Summon this card from your GY (if it was there when the monster was sent) or hand (even if not), and if you do, its ATK becomes that monster's, also banish it when it leaves the field. You can only use each effect of "Deep-Eyes White Dragon, the Blue Abyss" once per turn.` },
+  { id:'observer', name:'Favorite HERO Flame Wingman', type:'fusion', attr:'Wind', lv:6, rank:false, atk:2100, def:1200,
+    set:'Limit Over Collection: The Heroes', ocgDate:'2026-02',
+    art:'./overframe-cards/7.webp',
+    wallpaper:'./overframe-wallpapers/hero.jpg',
+    relation:'Retrain of', originalName:'Elemental HERO Flame Wingman', originalArt:'./overframe-originals/hero.jpg',
+    effect:'2 monsters with the same Type but different Attributes(This card is always treated as an "Elemental HERO" card.) When an attack is declared involving this card and a monster with 2200 or more ATK: You can make this card gain 1000 ATK, then you can Special Summon 1 Level 4 or lower monster from your hand in Defense Position. If a monster(s) was destroyed by battle this turn (Quick Effect): You can Fusion Summon 1 Fusion Monster from your Extra Deck, using monsters from your hand or field. You can only use each effect of "Favorite HERO Flame Wingman" once per turn.' },
+  { id:'birds',    name:'Black Luster Soldier - Soldier of Light and Darkness', type:'ritual', attr:'EARTH', lv:8, rank:false, atk:3000, def:2500,
+    set:'Chaos Origins', ocgDate:'2026-04',
+    art:'./overframe-cards/8.webp',
+    wallpaper:'./overframe-wallpapers/bls.jpg',
+    relation:'Retrain of', originalName:'Black Luster Soldier', originalArt:'./overframe-originals/bls.jpg',
+    effect:`You can Ritual Summon this card with "Light and Darkness Ritual". Unaffected by your opponent's activated effects, unless they target this card, also cannot be destroyed by battle. You can only use each of the following effects of "Black Luster Soldier - Soldier of Light and Darkness" once per turn. If this card is Special Summoned: You can target 1 card your opponent controls; banish it. When this card destroys an opponent's monster by battle: You can make this card gain 1500 ATK, and if you do, it can make a second attack in a row.` },
+  { id:'storm',    name:'Magician of Dark Chaos - Black Chaos', type:'ritual', attr:'DARK', lv:8, rank:false, atk:2800, def:2600,
+    set:'Chaos Origins', ocgDate:'2026-04',
+    art:'./overframe-cards/9.webp',
+    wallpaper:'./overframe-wallpapers/mobc.jpg',
+    relation:'Retrain of', originalName:'Magician of Black Chaos', originalArt:'./overframe-originals/bc.jpg',
+    effect:`You can Ritual Summon this card with "Light and Darkness Ritual". Unaffected by your opponent's activated effects, unless they target this card, also Spells/Traps you control cannot be destroyed, or banished, by your opponent's card effects. You can only use each of the following effects of "Magician of Dark Chaos - Black Chaos" once per turn. If this card is Special Summoned: You can add 1 Spell from your GY to your hand. You can target 1 card your opponent controls; banish it face-down.` },
+  { id:'tide',     name:'Slifer the Sky Dragon', type:'effect', attr:'DIVINE', lv:10, rank:false, atk:'?', def:'?',
+    set:'Original Artwork Collection', ocgDate:'2026-09',
+    art:'./overframe-cards/10.png',
+    wallpaper:'./overframe-wallpapers/slifer2.jpg',
+    relation:'Inspired by', originalName:'Slifer the Sky Dragon (Classic)', originalArt:'./overframe-originals/slifer.jpg',
+    effect:`Requires 3 Tributes to Normal Summon (cannot be Normal Set). This card's Normal Summon cannot be negated. When Normal Summoned, cards and effects cannot be activated. Once per turn, during the End Phase, if this card was Special Summoned: Send it to the GY. Gains 1000 ATK/DEF for each card in your hand. If a monster(s) is Normal or Special Summoned to your opponent's field in Attack Position: That monster(s) loses 2000 ATK, then if its ATK has been reduced to 0 as a result, destroy it.` },
+  { id:'war',      name:'The Winged Dragon of Ra, Sun God of Darkness', type:'fusion', attr:'DIVINE', lv:10, rank:false, atk:0, def:0,
+    set:'Sun God Archive', ocgDate:'2026-11',
+    art:'./overframe-cards/11.png',
+    wallpaper:'./overframe-wallpapers/RA.jpg',
+    relation:'Inspired by', originalName:'The Winged Dragon of Ra', originalArt:'./overframe-originals/ra.jpg',
+    effect:`"The Winged Dragon of Ra" + 3 "Sun God" monsters. Unaffected by other cards' effects. Once per turn, during the Main Phase (Quick Effect): You can discard any number of "Sun God" cards, then choose that many of your opponent's occupied Main Monster Zones; your opponent must send the monsters in those zones to the GY. When an attack is declared involving this card: You can pay LP so that you only have 1 left; this card gains ATK/DEF equal to the amount of LP paid and the total ATK of all "Sun God" monsters currently in your GY.` },
+  { id:'door',     name:'Exodia the Obliterator', type:'effect', attr:'DARK', lv:10, rank:false, atk:1000, def:1000,
+    set:'Original Artwork Collection', ocgDate:'2026-09',
+    art:'./overframe-cards/12.png',
+    wallpaper:'./overframe-wallpapers/exodia.jpg',
+    relation:'Inspired by', originalName:'Exodia the Forbidden One', originalArt:'./overframe-originals/exodia.png',
+    effect:`When you draw this card during your turn: You can reveal it; Special Summon it. If this card is Special Summoned during your turn: You can activate this effect; for the rest of this turn, neither player can activate cards or effects, except "Exodia the Obliterator", also you cannot Normal or Specialon monsters. At the start of the Damage Step, if this card battles: You can destroy as many monsters your opponent controls as possible, and if you do, inflict damage to your opponent equal to the total original ATK of those destroyed monsters.`}
+];
+
+const cards = SEED.map((c, i) => Object.assign({}, c, {
+  year: c.ocgDate || '2026-02',
+  artUrl: c.art || null,
+  wallpaperUrl: c.wallpaper || null,
+  originalArtUrl: c.originalArt || null,
+  isCustomArt: Boolean(c.art)
+}));
+
+const root = document.documentElement;
+const rack = document.getElementById('rack');
+const stage = document.getElementById('stage');
+const probe = document.getElementById('probe');
+const ring = document.getElementById('ring');
+const capTitle = document.getElementById('capTitle');
+const capMask = capTitle.parentElement;
+const tlDot = document.getElementById('tlDot');
+const timeline = document.getElementById('timeline');
+const tlHit = document.getElementById('tlHit');
+const cursor = document.getElementById('cursor');
+const detail = document.getElementById('detail');
+const dWallpaper = document.getElementById('dWallpaper');
+const refBox = document.getElementById('refBox');
+const refTag = document.getElementById('refTag');
+const refName = document.getElementById('refName');
+const refCardWrap = document.getElementById('refCardWrap');
+
+const aboutSheet = document.getElementById('aboutSheet');
+const aboutWallpaper = document.getElementById('aboutWallpaper');
+const aboutCloseBtn = document.getElementById('aboutCloseBtn');
+const aboutNavBtn = document.getElementById('aboutNavBtn');
+const cardsNavBtn = document.getElementById('cardsNavBtn');
+const brandBtn = document.getElementById('brandBtn');
+const burgerBtn = document.getElementById('burgerBtn');
+
+const RM = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+let H = 300, ws = 48, d = 206, gap = 10.5, U = 435, P = 1400;
+const STEP = 2;
+let XS = new Float32Array(2), N = 2;
+let cyPx = 0, rackTop = 0, rackBottom = 0;
+
+function buildXS(){
+  N = Math.ceil(3 * U / STEP) + 1;
+  XS = new Float32Array(N);
+  let acc = 0;
+  for (let i = 1; i < N; i++){
+    acc += 2 / (1 + Math.pow((i - 0.5) * STEP / U, 1.6));
+    XS[i] = acc;
+  }
+}
+function xsc(u){
+  const i = Math.min(N - 1, Math.round(Math.abs(u) / STEP));
+  return Math.sign(u) * XS[i];
+}
+
+function measure(){
+  H = probe.getBoundingClientRect().height || 300;
+  ws = H * 0.160;
+  d  = H * 0.686;
+  gap = H * 0.035;
+  U = H * (window.innerWidth < 768 ? 1.05 : 1.45);
+  P = 1400;
+  buildXS();
+  root.style.setProperty('--wspx', ws + 'px');
+  root.style.setProperty('--dpx', d + 'px');
+  root.style.setProperty('--gappx', gap + 'px');
+  const r = rack.getBoundingClientRect();
+  cyPx = r.top + r.height / 2;
+  rackTop = r.top;
+  rackBottom = r.bottom;
+}
+
+const clamp01 = x => x < 0 ? 0 : x > 1 ? 1 : x;
+const smoothstep = x => x * x * (3 - 2 * x);
+const mod = (n, m) => ((n % m) + m) % m;
+const sign = x => x < 0 ? -1 : x > 0 ? 1 : 0;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
+const cssUrl = u => String(u).replace(/["\\]/g, '\\$&');
+
+function rel(v, s){
+  let r = (v - s) % 36;
+  if (r < -18) r += 36;
+  if (r >= 18) r -= 36;
+  return r;
+}
+function F(r){
+  let B;
+  if (Math.abs(r) < 1) B = (r + Math.sin(Math.PI * r) / Math.PI) / 2;
+  else B = 0.5 * sign(r);
+  return r * (ws + gap) + (d - ws + 1.4 * gap) * B;
+}
+function scl(u){ return 1 / (1 + Math.pow(Math.abs(u) / U, 1.6)); }
+
+const slabs = [];
+let hoverV = null;
+
+function pipMarkup(c){
+  if (c.type === 'spell' || c.type === 'trap') return '';
+  const n = Math.min(c.lv || 0, 10);
+  let out = '';
+  for (let i = 0; i < n; i++) out += '<i class="' + (c.rank ? 'rank' : '') + '"></i>';
+  return out;
+}
+function numsMarkup(c){
+  if (c.type === 'spell' || c.type === 'trap') return '—';
+  return 'ATK ' + c.atk + ' / DEF ' + c.def;
+}
+
+function buildSlab(v){
+  const i = mod(v, 12);
+  const c = cards[i];
+  const raw = FRAME[c.type][0], ink = FRAME[c.type][1], on = FRAME_ON[c.type];
+
+  const slab = document.createElement('div');
+  slab.className = 'slab';
+  slab.dataset.v = String(v);
+  slab.dataset.i = String(i);
+  slab.style.setProperty('--frm', raw);
+  slab.style.setProperty('--frm-ink', ink);
+  slab.style.setProperty('--on-frm', on);
+
+  slab.innerHTML =
+    '<div class="face sp">' +
+      '<div class="sp-strip"></div>' +
+      '<div class="sp-thumb" data-art="' + i + '"></div>' +
+      '<div class="sp-name">' + esc(c.name) + '</div>' +
+      '<div class="sp-code">' + esc(c.ocgDate) + '</div>' +
+      '<div class="sp-grade">' + (i % 3 === 0 ? 'PSA 10' : 'OVF 10') + '</div>' +
+      '<div class="sp-sheen"></div>' +
+    '</div>' +
+    '<div class="face cv' + (c.isCustomArt ? ' has-custom-art' : '') + '">' +
+      '<div class="cv-frame">' +
+        '<div class="cv-custom-art" data-custom-art="' + i + '"></div>' +
+        '<div class="cv-head">' +
+          '<span class="cv-name">' + esc(c.name) + '</span>' +
+          '<span class="cv-mark">OVERFRAME</span>' +
+        '</div>' +
+        '<div class="cv-art">' +
+          '<div class="cv-inner" data-art="' + i + '"></div>' +
+          '<div class="cv-bleed" data-art="' + i + '"></div>' +
+        '</div>' +
+        '<div class="cv-stars">' + pipMarkup(c) + '</div>' +
+        '<div class="cv-foot">' +
+          '<p class="cv-text">' + esc(c.effect) + '</p>' +
+          '<div class="cv-nums">' + esc(numsMarkup(c)) + '</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+  const spEl = slab.querySelector('.sp');
+  const cvEl = slab.querySelector('.cv');
+
+  slab.addEventListener('pointerenter', () => { hoverV = v; });
+  slab.addEventListener('pointerleave', () => { if (hoverV === v) hoverV = null; });
+
+  const rec = { v: v, i: i, el: slab, spEl: spEl, cvEl: cvEl, lift: 0, shadeSp: -1, shadeCv: -1, hidden: null };
+  slabs.push(rec);
+  stage.appendChild(slab);
+  return rec;
+}
+
+function buildRack(){
+  stage.innerHTML = '';
+  slabs.length = 0;
+  for (let copy = 0; copy < 3; copy++){
+    for (let i = 0; i < 12; i++) buildSlab(copy * 12 + i);
+  }
+}
+
+/* ---------- Card name only under card ---------- */
+let capInit = false;
+function setCardName(i, dir, instant){
+  const name = cards[i].name;
+  const old = Array.from(capMask.children);
+  const span = document.createElement('span');
+  span.className = 'cap-title';
+  span.textContent = name;
+  if (instant || !capInit || RM.matches){
+    capMask.innerHTML = '';
+    capMask.appendChild(span);
+    capInit = true;
+    return;
+  }
+  capMask.appendChild(span);
+  span.animate(
+    [{ transform: 'translateY(' + (dir * 105) + '%)' }, { transform: 'translateY(0%)' }],
+    { duration: 480, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'both' }
+  );
+  old.forEach(o => {
+    if (o === span) return;
+    const a = o.animate(
+      [{ transform: 'translateY(0%)' }, { transform: 'translateY(' + (-dir * 105) + '%)' }],
+      { duration: 480, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'both' }
+    );
+    a.onfinish = () => o.remove();
+  });
+}
+
+function buildTimeline(){
+  Array.from(timeline.querySelectorAll('.tl-tick, .tl-year')).forEach(n => n.remove());
+  for (let i = 0; i < 12; i++){
+    const pct = (i / 11) * 100;
+
+    const tick = document.createElement('div');
+    tick.className = 'tl-tick';
+    tick.style.left = pct + '%';
+    timeline.appendChild(tick);
+
+    const yr = document.createElement('div');
+    yr.className = 'tl-year';
+    yr.textContent = cards[i].ocgDate;
+    yr.style.left = pct + '%';
+    if (i === 0) yr.style.transform = 'none';
+    else if (i === 11) yr.style.transform = 'translateX(-100%)';
+    else yr.style.transform = 'translateX(-50%)';
+    const keep = [0, 3, 6, 9, 11].indexOf(i) >= 0;
+    if (window.innerWidth <= 767 && !keep) yr.classList.add('hide');
+    timeline.appendChild(yr);
+  }
+}
+
+function typeLine(c){ return c.type.toUpperCase(); }
+function lvText(c){
+  if (c.type === 'spell' || c.type === 'trap') return null;
+  return (c.rank ? 'Rank ' : 'Lv ') + c.lv;
+}
+function subLine(c){ return c.set + ' (' + c.ocgDate + ') — ' + typeLine(c) + ' / ' + c.attr; }
+
+function paintWallpaper(c){
+  if (c && c.wallpaperUrl){
+    dWallpaper.style.backgroundImage = 'url("' + cssUrl(c.wallpaperUrl) + '")';
+  } else {
+    dWallpaper.style.backgroundImage = 'none';
+  }
+}
+
+function paintOriginalCard(c){
+  refTag.textContent = (c.relation || 'ORIGINAL CARD').toUpperCase();
+  refName.textContent = c.originalName || c.name;
+  refCardWrap.innerHTML = '';
+
+  if (c.originalArtUrl){
+    const img = new Image();
+    img.alt = c.originalName || c.name;
+    img.decoding = 'async';
+    img.src = c.originalArtUrl;
+    img.onerror = function(){
+      img.remove();
+      const ph = document.createElement('div');
+      ph.className = 'ref-placeholder';
+      ph.textContent = 'Add original card image at: ' + c.originalArtUrl;
+      refCardWrap.appendChild(ph);
+    };
+    refCardWrap.appendChild(img);
+  } else {
+    const ph = document.createElement('div');
+    ph.className = 'ref-placeholder';
+    ph.textContent = 'Set originalArt in SEED for ' + c.name;
+    refCardWrap.appendChild(ph);
+  }
+}
+
+const dCode = document.getElementById('dCode');
+const dTitle = document.getElementById('dTitle');
+const dMeta = document.getElementById('dMeta');
+const dStats = document.getElementById('dStats');
+const dEffect = document.getElementById('dEffect');
+const dCredit = document.getElementById('dCredit');
+const dWatch = document.getElementById('dWatch');
+const closeBtn = document.getElementById('closeBtn');
+const dLines = [dCode, dTitle, dMeta, dStats, dEffect, dCredit, dWatch];
+
+function paintDetailText(i){
+  const c = cards[i];
+  dCode.textContent = subLine(c);
+  dTitle.textContent = c.name;
+  const lv = lvText(c);
+  dMeta.textContent = 'OCG ' + c.ocgDate + ' / ' + typeLine(c) + (lv ? ' / ' + lv : '');
+  dStats.textContent = (c.type === 'spell' || c.type === 'trap')
+    ? 'ATK — · DEF —'
+    : 'ATK ' + c.atk + ' · DEF ' + c.def;
+  dEffect.textContent = c.effect;
+  dCredit.textContent = 'Artwork ©スタジオ・ダイス／集英社・テレビ東京・KONAMI';
+}
+
+let s = 17, T = 17;
+let activeI = -1;
+let dotPos = mod(s, 12);
+let mx = window.innerWidth / 2, my = window.innerHeight / 2;
+let tiltX = 0, tiltY = 0;
+let dragging = false;
+let cursorX = mx, cursorY = my;
+let cursorState = '';
+let detailOpen = false;
+let aboutOpen = false;
+let refRevealTimer = 0;
+let last = 0;
+let wheelTimer = 0;
+let btnHover = false;
+
+const anySheetOpen = () => detailOpen || aboutOpen;
+
+function setAccent(i){
+  const c = cards[i];
+  root.style.setProperty('--accent', FRAME[c.type][0]);
+  root.style.setProperty('--accent-ink', FRAME[c.type][1]);
+}
+
+function updateActiveA11y(){
+  for (let n = 0; n < slabs.length; n++){
+    const rec = slabs[n];
+    const on = rec.i === activeI && Math.abs(rel(rec.v, s)) < 0.5;
+    if (on){
+      rec.el.setAttribute('role', 'button');
+      rec.el.setAttribute('tabindex', '0');
+      rec.el.setAttribute('aria-label', 'Open ' + cards[rec.i].name);
+    } else {
+      rec.el.removeAttribute('role');
+      rec.el.removeAttribute('tabindex');
+      rec.el.removeAttribute('aria-label');
+    }
+  }
+}
+
+function loop(now){
+  const dtMs = now - last;
+  last = now;
+  const dt = Math.min(50, dtMs) / 1000;
+
+  if (RM.matches) s = T;
+  else s += (T - s) * (1 - Math.exp(-(dragging ? 18 : 5.2) * dt));
+  if (Math.abs(s) > 48){
+    const shift = Math.round(s / 12) * 12;
+    s -= shift; T -= shift;
+  }
+
+  const ai = mod(Math.round(s), 12);
+  if (ai !== activeI){
+    const dir = sign(T - s) || 1;
+    activeI = ai;
+    setAccent(ai);
+    setCardName(ai, dir, false);
+    updateActiveA11y();
+  }
+
+  const settled = Math.abs(T - s) < 0.35;
+  const onCard = settled && !anySheetOpen() &&
+    Math.abs(mx - window.innerWidth / 2) < 0.58 * d &&
+    Math.abs(my - cyPx) < 0.58 * H;
+  let tY, tX;
+  if (onCard){
+    tY = (mx - window.innerWidth / 2) / (0.55 * d) * 8;
+    tX = -(my - cyPx) / (H / 2) * 5;
+  } else {
+    tY = (mx - window.innerWidth / 2) / window.innerWidth * 4;
+    tX = 0;
+  }
+  const easeTilt = RM.matches ? 1 : (1 - Math.exp(-7 * dt));
+  tiltY += (tY - tiltY) * easeTilt;
+  tiltX += (tX - tiltX) * easeTilt;
+
+  for (let n = 0; n < slabs.length; n++){
+    const rec = slabs[n];
+    const r = rel(rec.v, s);
+    const o = smoothstep(clamp01(1 - Math.abs(r)));
+    const u = F(r);
+
+    if (Math.abs(u) > U * 1.95){
+      if (rec.hidden !== true){ rec.el.style.display = 'none'; rec.hidden = true; }
+      continue;
+    }
+    if (rec.hidden !== false){ rec.el.style.display = ''; rec.hidden = false; }
+
+    const sc = scl(u);
+    const k = 1 / sc;
+
+    const liftTarget = (hoverV === rec.v && Math.abs(r) > 0.5 && !anySheetOpen()) ? 1 : 0;
+    if (RM.matches) rec.lift = liftTarget;
+    else rec.lift += (liftTarget - rec.lift) * (1 - Math.exp(-12 * dt));
+
+    const z = P * (1 - k) + o * H * 0.1;
+    const x = xsc(u) * k;
+    const y = (H * 0.5 * (1 - sc) * 0.42 + o * H * 0.012 - rec.lift * H * 0.05) * k;
+
+    const ry = sign(u) * Math.min(1, Math.abs(u) / U) * 26 * (1 - o) - 90 * o + tiltY * o;
+    const rx = tiltX * o;
+
+    rec.el.style.transform =
+      'translate3d(' + x.toFixed(2) + 'px,' + y.toFixed(2) + 'px,' + z.toFixed(2) + 'px) ' +
+      'rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg)';
+    rec.el.style.zIndex = String(Math.round(3000 + z));
+
+    const shSp = Math.min(0.6, o * 0.55 + (1 - sc) * 0.32);
+    const shCv = (1 - o) * 0.82;
+    if (Math.abs(shSp - rec.shadeSp) > 0.004){
+      rec.spEl.style.setProperty('--shade', shSp.toFixed(3));
+      rec.shadeSp = shSp;
+    }
+    if (Math.abs(shCv - rec.shadeCv) > 0.004){
+      rec.cvEl.style.setProperty('--shade', shCv.toFixed(3));
+      rec.shadeCv = shCv;
+    }
+  }
+
+  const target = mod(s, 12);
+  const diff = target - dotPos;
+  if (RM.matches || Math.abs(diff) > 6) dotPos = target;
+  else dotPos += diff * (1 - Math.exp(-14 * dt));
+  tlDot.style.left = (dotPos / 11 * 100) + '%';
+
+  const ringTarget = anySheetOpen() ? 0 : smoothstep(clamp01(1 - Math.abs(T - s) * 3));
+  ring.style.transform = 'translate(-50%,-50%) scale(' + ringTarget.toFixed(3) + ')';
+
+  cursorX = mx;
+  cursorY = my;
+  cursor.style.transform = 'translate3d(' + cursorX.toFixed(1) + 'px,' + cursorY.toFixed(1) + 'px,0)';
+
+  let state = '';
+  if (!anySheetOpen()){
+    if (btnHover) state = 'btn';
+    else if (onCard) state = 'open';
+    else if (my > rackTop && my < rackBottom) state = 'spine';
+  }
+  if (state !== cursorState){
+    cursor.classList.remove('open', 'spine', 'btn');
+    if (state) cursor.classList.add(state);
+    cursorState = state;
+  }
+
+  requestAnimationFrame(loop);
+}
+
+/* ---------- Direct mouse-click opening + drag support ---------- */
+let drag = null, moved = false, suppressClick = false;
+
+rack.addEventListener('pointerdown', e => {
+  if (anySheetOpen()) return;
+  drag = { x: e.clientX, t0: T };
+  moved = false;
+});
+window.addEventListener('pointermove', e => {
+  mx = e.clientX; my = e.clientY;
+  btnHover = !!(e.target && e.target.closest && e.target.closest('button, a, .tl-hit'));
+  if (!drag || anySheetOpen()) return;
+  const dx = e.clientX - drag.x;
+  if (!moved && Math.abs(dx) > 6) moved = true;
+  if (moved){
+    dragging = true;
+    T = drag.t0 - dx / (ws + gap);
+  }
+}, { passive: true });
+
+function endDrag(){
+  if (!drag) return;
+  dragging = false;
+  if (moved){
+    T = Math.round(T);
+    suppressClick = true;
+    setTimeout(() => { suppressClick = false; }, 20);
+  }
+  drag = null;
+}
+window.addEventListener('pointerup', endDrag);
+window.addEventListener('pointercancel', endDrag);
+window.addEventListener('pointerleave', () => { mx = window.innerWidth / 2; my = -999; });
+
+rack.addEventListener('click', e => {
+  if (suppressClick || anySheetOpen()) return;
+  const el = e.target.closest ? e.target.closest('.slab') : null;
+  if (el){
+    const v = Number(el.dataset.v);
+    const r = rel(v, s);
+    T = Math.round(T + r);
+    openDetail(Number(el.dataset.i));
+    return;
+  }
+  if (Math.abs(e.clientX - window.innerWidth / 2) < 0.65 * d && Math.abs(e.clientY - cyPx) < 0.65 * H){
+    openDetail(mod(Math.round(T), 12));
+  }
+});
+
+document.getElementById('prev').addEventListener('click', () => {
+  if (!anySheetOpen()) T = Math.round(T) - 1;
+});
+document.getElementById('next').addEventListener('click', () => {
+  if (!anySheetOpen()) T = Math.round(T) + 1;
+});
+
+window.addEventListener('keydown', e => {
+  if (e.key === 'Escape'){
+    if (aboutOpen){ e.preventDefault(); closeAbout(); return; }
+    if (detailOpen){ e.preventDefault(); closeDetail(); return; }
+    return;
+  }
+  if (anySheetOpen()) return;
+  const active = document.activeElement;
+  if (e.key === 'ArrowLeft'){ e.preventDefault(); T = Math.round(T) - 1; }
+  else if (e.key === 'ArrowRight'){ e.preventDefault(); T = Math.round(T) + 1; }
+  else if (e.key === 'Enter'){
+    const tag = active ? active.tagName : '';
+    if (!tag || tag === 'BODY' || (active && active.classList.contains('slab'))){
+      e.preventDefault();
+      openDetail();
+    }
+  }
+});
+
+window.addEventListener('wheel', e => {
+  if (anySheetOpen()) return;
+  const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+  T += delta / (ws + gap) * 0.5;
+  clearTimeout(wheelTimer);
+  wheelTimer = setTimeout(() => { T = Math.round(T); }, 160);
+}, { passive: true });
+
+tlHit.addEventListener('click', e => {
+  if (anySheetOpen()) return;
+  const box = tlHit.getBoundingClientRect();
+  const f = clamp01((e.clientX - box.left) / box.width);
+  const idx = Math.round(f * 11);
+  const base = Math.round(T);
+  const cur = mod(base, 12);
+  let dd = mod(idx - cur, 12);
+  if (dd > 6) dd -= 12;
+  T = base + dd;
+});
+
+/* ---------- Hide top bar inside sheets when scrolled down ---------- */
+detail.addEventListener('scroll', () => {
+  detail.classList.toggle('scrolled', detail.scrollTop > 12);
+}, { passive: true });
+
+aboutSheet.addEventListener('scroll', () => {
+  aboutSheet.classList.toggle('scrolled', aboutSheet.scrollTop > 12);
+}, { passive: true });
+
+function activeRec(){
+  let best = slabs[0], bd = 1e9;
+  for (let n = 0; n < slabs.length; n++){
+    const rec = slabs[n];
+    const dd = Math.abs(rel(rec.v, s));
+    if (dd < bd){ bd = dd; best = rec; }
+  }
+  return best;
+}
+
+function cardRect(){ return activeRec().cvEl.getBoundingClientRect(); }
+
+function resetRefBox(){
+  clearTimeout(refRevealTimer);
+  refBox.getAnimations().forEach(a => a.cancel());
+  refBox.style.opacity = '0';
+  refBox.style.clipPath = 'inset(50% 50% 50% 50% round 4px)';
+}
+
+function triggerRefReveal(){
+  refBox.getAnimations().forEach(a => a.cancel());
+  refBox.style.opacity = '1';
+  const from = 'inset(44% 38% 44% 38% round 4px)';
+  const to = 'inset(0px 0px 0px 0px round 4px)';
+  refBox.style.clipPath = to;
+  refBox.animate(
+    [{ clipPath: from }, { clipPath: to }],
+    { duration: RM.matches ? 1 : 950, easing: 'cubic-bezier(.76,0,.18,1)', fill: 'forwards' }
+  );
+}
+
+function openDetail(forcedIdx){
+  if (anySheetOpen()) return;
+  clearTimeout(refRevealTimer);
+  T = Math.round(T);
+  const rec = activeRec();
+  const i = (typeof forcedIdx === 'number' && !isNaN(forcedIdx)) ? mod(forcedIdx, 12) : rec.i;
+
+  setAccent(i);
+  paintDetailText(i);
+  paintWallpaper(cards[i]);
+  paintOriginalCard(cards[i]);
+  resetRefBox();
+
+  detail.scrollTop = 0;
+  detail.classList.remove('scrolled');
+  detail.classList.add('show');
+  detail.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('sheet-open');
+  detailOpen = true;
+
+  const rect = rec.cvEl.getBoundingClientRect();
+  const from = 'inset(' + Math.round(rect.top) + 'px ' +
+    Math.round(window.innerWidth - rect.right) + 'px ' +
+    Math.round(window.innerHeight - rect.bottom) + 'px ' +
+    Math.round(rect.left) + 'px round 3px)';
+  const to = 'inset(0px 0px 0px 0px round 0px)';
+
+  detail.style.clipPath = to;
+  detail.animate(
+    [{ clipPath: from }, { clipPath: to }],
+    { duration: RM.matches ? 1 : 1050, easing: 'cubic-bezier(.76,0,.18,1)', fill: 'forwards' }
+  );
+
+  for (let idx = 0; idx < dLines.length; idx++){
+    const el = dLines[idx];
+    const anims = el.getAnimations();
+    for (let a = 0; a < anims.length; a++) anims[a].cancel();
+    el.style.transform = 'translateY(110%)';
+    el.animate(
+      [{ transform: 'translateY(110%)' }, { transform: 'translateY(0%)' }],
+      {
+        duration: RM.matches ? 1 : 850,
+        delay: RM.matches ? 0 : 520 + idx * 70,
+        easing: 'cubic-bezier(.2,.8,.2,1)',
+        fill: 'both'
+      }
+    );
+  }
+
+  /* 2.0-second delay before revealing the original/retrain card */
+  refRevealTimer = setTimeout(() => {
+    if (detailOpen) triggerRefReveal();
+  }, RM.matches ? 10 : 2000);
+
+  setTimeout(() => { try { closeBtn.focus({ preventScroll: true }); } catch (e) {} }, RM.matches ? 10 : 900);
+}
+
+function closeDetail(){
+  if (!detailOpen) return;
+  detailOpen = false;
+  clearTimeout(refRevealTimer);
+
+  const rect = cardRect();
+  const to = 'inset(' + Math.round(rect.top) + 'px ' +
+    Math.round(window.innerWidth - rect.right) + 'px ' +
+    Math.round(window.innerHeight - rect.bottom) + 'px ' +
+    Math.round(rect.left) + 'px round 3px)';
+
+  let done = false;
+  const finish = () => {
+    if (done) return;
+    done = true;
+    const anims = detail.getAnimations({ subtree: true });
+    for (let i = 0; i < anims.length; i++) anims[i].cancel();
+    detail.classList.remove('show', 'scrolled');
+    detail.scrollTop = 0;
+    detail.style.clipPath = '';
+    detail.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('sheet-open');
+    for (let i = 0; i < dLines.length; i++){
+      dLines[i].style.transform = 'translateY(110%)';
+    }
+    resetRefBox();
+  };
+
+  const cur = getComputedStyle(detail).clipPath || 'inset(0px round 0px)';
+  const duration = RM.matches ? 1 : 850;
+  const a = detail.animate(
+    [{ clipPath: cur }, { clipPath: to }],
+    { duration: duration, easing: 'cubic-bezier(.76,0,.18,1)', fill: 'forwards' }
+  );
+  a.onfinish = finish;
+  setTimeout(finish, duration + 260);
+}
+
+closeBtn.addEventListener('click', closeDetail);
+detail.addEventListener('click', e => { if (e.target === detail) closeDetail(); });
+dWatch.addEventListener('click', e => { e.preventDefault(); });
+
+/* ---------- About Me Sheet (same clip-path pop-up + custom wallpaper) ---------- */
+const aboutBlocks = Array.from(aboutSheet.querySelectorAll('.about-anim'));
+
+function openAbout(triggerEl){
+  if (aboutOpen) return;
+  if (detailOpen) closeDetail();
+
+  if (ABOUT_ME_WALLPAPER){
+    aboutWallpaper.style.backgroundImage = 'url("' + cssUrl(ABOUT_ME_WALLPAPER) + '")';
+  } else {
+    aboutWallpaper.style.backgroundImage = 'none';
+  }
+
+  aboutSheet.scrollTop = 0;
+  aboutSheet.classList.remove('scrolled');
+  aboutSheet.classList.add('show');
+  aboutSheet.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('sheet-open');
+  aboutOpen = true;
+
+  const srcRect = triggerEl
+    ? triggerEl.getBoundingClientRect()
+    : { top: 26, right: window.innerWidth - 160, bottom: 50, left: window.innerWidth - 240 };
+  const from = 'inset(' + Math.round(srcRect.top) + 'px ' +
+    Math.round(window.innerWidth - srcRect.right) + 'px ' +
+    Math.round(window.innerHeight - srcRect.bottom) + 'px ' +
+    Math.round(srcRect.left) + 'px round 3px)';
+  const to = 'inset(0px 0px 0px 0px round 0px)';
+
+  aboutSheet.style.clipPath = to;
+  aboutSheet.animate(
+    [{ clipPath: from }, { clipPath: to }],
+    { duration: RM.matches ? 1 : 950, easing: 'cubic-bezier(.76,0,.18,1)', fill: 'forwards' }
+  );
+
+  aboutBlocks.forEach((el, idx) => {
+    el.getAnimations().forEach(a => a.cancel());
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(22px)';
+    el.animate(
+      [
+        { opacity: 0, transform: 'translateY(22px)' },
+        { opacity: 1, transform: 'translateY(0px)' }
+      ],
+      {
+        duration: RM.matches ? 1 : 780,
+        delay: RM.matches ? 0 : 420 + idx * 95,
+        easing: 'cubic-bezier(.2,.8,.2,1)',
+        fill: 'forwards'
+      }
+    );
+  });
+
+  setTimeout(() => { try { aboutCloseBtn.focus({ preventScroll: true }); } catch (e) {} }, RM.matches ? 10 : 850);
+}
+
+function closeAbout(){
+  if (!aboutOpen) return;
+  aboutOpen = false;
+
+  const btnRect = aboutNavBtn.getBoundingClientRect();
+  const to = 'inset(' + Math.round(btnRect.top) + 'px ' +
+    Math.round(window.innerWidth - btnRect.right) + 'px ' +
+    Math.round(window.innerHeight - btnRect.bottom) + 'px ' +
+    Math.round(btnRect.left) + 'px round 3px)';
+
+  let done = false;
+  const finish = () => {
+    if (done) return;
+    done = true;
+    aboutSheet.getAnimations({ subtree: true }).forEach(a => a.cancel());
+    aboutSheet.classList.remove('show', 'scrolled');
+    aboutSheet.scrollTop = 0;
+    aboutSheet.style.clipPath = '';
+    aboutSheet.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('sheet-open');
+    aboutBlocks.forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(22px)';
+    });
+  };
+
+  const cur = getComputedStyle(aboutSheet).clipPath || 'inset(0px round 0px)';
+  const duration = RM.matches ? 1 : 800;
+  const a = aboutSheet.animate(
+    [{ clipPath: cur }, { clipPath: to }],
+    { duration: duration, easing: 'cubic-bezier(.76,0,.18,1)', fill: 'forwards' }
+  );
+  a.onfinish = finish;
+  setTimeout(finish, duration + 260);
+}
+
+aboutNavBtn.addEventListener('click', e => { e.preventDefault(); openAbout(aboutNavBtn); });
+brandBtn.addEventListener('click', e => { e.preventDefault(); openAbout(brandBtn); });
+burgerBtn.addEventListener('click', e => { e.preventDefault(); openAbout(burgerBtn); });
+cardsNavBtn.addEventListener('click', e => {
+  e.preventDefault();
+  if (aboutOpen) closeAbout();
+  if (detailOpen) closeDetail();
+});
+aboutCloseBtn.addEventListener('click', closeAbout);
+aboutSheet.addEventListener('click', e => { if (e.target === aboutSheet) closeAbout(); });
+
+function applyLocalArt(){
+  for (let i = 0; i < cards.length; i++){
+    const c = cards[i];
+    if (!c.artUrl) continue;
+
+    if (c.isCustomArt){
+      const customBoxes = document.querySelectorAll('.cv-custom-art[data-custom-art="' + i + '"]');
+      for (let n = 0; n < customBoxes.length; n++){
+        const box = customBoxes[n];
+        if (box.querySelector('img')) continue;
+        const img = new Image();
+        img.alt = c.name;
+        img.decoding = 'async';
+        img.onerror = function(){ img.remove(); };
+        img.src = c.artUrl;
+        box.appendChild(img);
+      }
+    } else {
+      const boxes = document.querySelectorAll('.cv-inner[data-art="' + i + '"], .cv-bleed[data-art="' + i + '"]');
+      for (let n = 0; n < boxes.length; n++){
+        const box = boxes[n];
+        if (box.querySelector('img')) continue;
+        const img = new Image();
+        img.alt = '';
+        img.decoding = 'async';
+        img.onerror = function(){ img.remove(); };
+        img.src = c.artUrl;
+        box.appendChild(img);
+      }
+    }
+
+    const thumbs = document.querySelectorAll('.sp-thumb[data-art="' + i + '"]');
+    for (let n = 0; n < thumbs.length; n++){
+      thumbs[n].style.backgroundImage = 'url("' + cssUrl(c.artUrl) + '")';
+    }
+  }
+}
+
+function boot(){
+  measure();
+  buildRack();
+  applyLocalArt();
+  buildTimeline();
+  activeI = mod(Math.round(s), 12);
+  setAccent(activeI);
+  setCardName(activeI, 1, true);
+  updateActiveA11y();
+  requestAnimationFrame(t => { last = t; loop(t); });
+}
+
+let resizeTimer = 0;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => { measure(); buildTimeline(); }, 120);
+});
+if (RM.addEventListener) RM.addEventListener('change', () => { last = performance.now(); });
+
+boot();
+})();
+</script>
+</body>
+</html>
